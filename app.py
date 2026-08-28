@@ -5,6 +5,11 @@ from pathlib import Path
 import streamlit as st
 from PIL import Image, ImageOps
 
+try:
+    import fitz  # PyMuPDF
+except ImportError:
+    fitz = None
+
 
 # =========================================================
 # PAGE CONFIG
@@ -366,7 +371,7 @@ PROFILE = {
         """,
 
     "education":
-        "S1 Teknik Informatika",
+        "Bachelor of Informatics Engineering",
 
     "university":
         "Universitas Pamulang",
@@ -379,9 +384,9 @@ PROFILE = {
 
     "thesis":
         """
-        Implementasi Metode Regresi Linear Dan Support Vector
-        Machine Untuk Prediksi Harga Penutupan XAUUSD
-        Di Platform MetaTrader 4
+        Implementation of Linear Regression and Support Vector Machine
+        Methods for XAUUSD Closing Price Prediction
+        on the MetaTrader 4 Platform
         """,
 
     "whatsapp":
@@ -1104,8 +1109,133 @@ def get_featured_description(project):
 
 
 # =========================================================
+# PDF DOCUMENT HELPERS
+# =========================================================
+
+def render_pdf_preview(pdf_path, height=800):
+    """
+    Render a local PDF as images inside Streamlit.
+
+    This avoids embedding the PDF with a data: URL in an iframe.
+    Chrome can block that approach with:
+    "This page has been blocked by Chrome."
+
+    PyMuPDF renders each PDF page directly, so the preview does not depend
+    on the browser's built-in PDF viewer.
+    """
+
+    if fitz is None:
+        st.error(
+            "PDF preview requires PyMuPDF. "
+            "Add `PyMuPDF` to requirements.txt and redeploy the app."
+        )
+        return
+
+    try:
+        pdf_document = fitz.open(str(pdf_path))
+
+        if pdf_document.page_count == 0:
+            st.warning("This PDF is empty.")
+            pdf_document.close()
+            return
+
+        preview_width = 1180
+        max_preview_height = max(int(height), 500)
+
+        for page_number in range(pdf_document.page_count):
+            page = pdf_document.load_page(page_number)
+
+            rect = page.rect
+            scale = min(
+                preview_width / max(rect.width, 1),
+                max_preview_height / max(rect.height, 1),
+                1.75
+            )
+
+            pixmap = page.get_pixmap(
+                matrix=fitz.Matrix(scale, scale),
+                alpha=False
+            )
+
+            page_image = Image.frombytes(
+                "RGB",
+                [pixmap.width, pixmap.height],
+                pixmap.samples
+            )
+
+            page_image = ImageOps.expand(
+                page_image,
+                border=1,
+                fill=(30, 41, 59)
+            )
+
+            st.image(
+                page_image,
+                use_container_width=True
+            )
+
+            st.caption(
+                f"Page {page_number + 1} of {pdf_document.page_count}"
+            )
+
+        pdf_document.close()
+
+    except Exception as error:
+        st.error(
+            f"Unable to preview PDF: {error}"
+        )
+
+
+def document_card(document, preview_height=800):
+    """
+    Display document information, inline PDF preview,
+    and download button.
+    """
+
+    path = document["path"]
+
+    st.divider()
+
+    st.header(
+        f"{document['icon']} {document['title']}"
+    )
+
+    st.caption(
+        document["description"]
+    )
+
+    if not path.exists():
+
+        st.warning(
+            f"File not found. Add it to: "
+            f"assets/{path.name}"
+        )
+
+        return
+
+    st.markdown(
+        "#### PDF Preview"
+    )
+
+    render_pdf_preview(
+        path,
+        height=preview_height
+    )
+
+    st.download_button(
+        f"⬇️ Download {document['title']}",
+        data=path.read_bytes(),
+        file_name=document["file_name"],
+        mime="application/pdf",
+        use_container_width=True,
+        key=f"download_{path.stem}"
+    )
+
+
+# =========================================================
 # SIDEBAR
 # =========================================================
+
 
 st.sidebar.markdown(
     "## Aditya Nugroho"
@@ -1125,6 +1255,7 @@ page = st.sidebar.radio(
         "Projects",
         "Experience",
         "Certificates",
+        "Documents",
         "Education",
         "Contact"
     ]
@@ -1744,6 +1875,64 @@ elif page == "Certificates":
                 )
 
 
+
+# =========================================================
+# DOCUMENTS
+# =========================================================
+
+elif page == "Documents":
+
+    st.title(
+        "Documents"
+    )
+
+    st.caption(
+        "Professional and academic documents in PDF format."
+    )
+
+    documents = [
+        {
+            "title": "Curriculum Vitae",
+            "icon": "📄",
+            "description":
+                "Professional experience, education, "
+                "and technical skills.",
+            "path": ASSETS_DIR / "cv.pdf",
+            "file_name": "Aditya_Nugroho_CV.pdf"
+        },
+        {
+            "title": "Bachelor's Degree Certificate",
+            "icon": "🎓",
+            "description":
+                "Bachelor's degree certificate from "
+                "Universitas Pamulang.",
+            "path": ASSETS_DIR / "ijazah.pdf",
+            "file_name": "Aditya_Nugroho_Degree_Certificate.pdf"
+        },
+        {
+            "title": "Academic Transcript",
+            "icon": "📊",
+            "description":
+                "Official academic transcript "
+                "and course grades.",
+            "path": ASSETS_DIR / "transkrip_nilai.pdf",
+            "file_name":
+                "Aditya_Nugroho_Academic_Transcript.pdf"
+        }
+    ]
+
+    st.info(
+        "PDF documents are previewed directly on this page. "
+        "Use the download button to save a document."
+    )
+
+    for document in documents:
+
+        document_card(
+            document,
+            preview_height=800
+        )
+
 # =========================================================
 # EDUCATION
 # =========================================================
@@ -1800,12 +1989,12 @@ elif page == "Education":
 
 
     st.write(
-        "🇮🇩 Bahasa Indonesia"
+        "🇮🇩 Indonesian"
     )
 
 
     st.write(
-        "🇬🇧 Bahasa Inggris"
+        "🇬🇧 English"
     )
 
 
@@ -1893,33 +2082,7 @@ elif page == "Contact":
 
 
     # =====================================================
-    # CV
-    # =====================================================
 
-    cv_file = (
-        ASSETS_DIR / "cv.pdf"
-    )
-
-
-    if cv_file.exists():
-
-        st.divider()
-
-
-        st.download_button(
-            "📄 Download CV",
-
-            data=cv_file.read_bytes(),
-
-            file_name="Aditya_Nugroho_CV.pdf",
-
-            mime="application/pdf",
-
-            use_container_width=True
-        )
-
-
-# =========================================================
 # FOOTER
 # =========================================================
 
