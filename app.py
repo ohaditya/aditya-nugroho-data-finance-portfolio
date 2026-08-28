@@ -59,6 +59,12 @@ st.markdown(
         color: #E2E8F0;
     }
 
+    /*
+       FIX:
+       Memberikan ruang di bagian atas agar konten
+       tidak tertutup oleh header / toolbar Streamlit.
+    */
+
     .stAppViewContainer .main .block-container {
         max-width: 1180px;
         padding-top: 5.5rem !important;
@@ -519,6 +525,21 @@ EXPERIENCE = [
 # =========================================================
 
 def natural_key(value):
+    """
+    Natural sorting.
+
+    image1
+    image2
+    image3
+    image10
+
+    instead of:
+
+    image1
+    image10
+    image2
+    image3
+    """
 
     return [
         int(part) if part.isdigit() else part.lower()
@@ -530,6 +551,9 @@ def natural_key(value):
 
 
 def sorted_images(paths):
+    """
+    Sort images using natural numeric order.
+    """
 
     return sorted(
         paths,
@@ -538,6 +562,12 @@ def sorted_images(paths):
 
 
 def render_image_box(image_path, label=""):
+    """
+    Display image inside a fixed 16:9 area.
+
+    Large images are reduced.
+    Small images are NOT enlarged.
+    """
 
     BOX_W = 1200
     BOX_H = 675
@@ -1053,6 +1083,7 @@ def get_featured_description(project):
     )[0].strip()
 
 
+    # Remove common markdown formatting
     description = re.sub(
         r"[*_`#]",
         "",
@@ -1060,6 +1091,7 @@ def get_featured_description(project):
     )
 
 
+    # Limit length
     if len(description) > 150:
 
         description = (
@@ -1112,6 +1144,10 @@ st.sidebar.caption(
 # =========================================================
 
 if page == "Home":
+
+    # =====================================================
+    # PROFILE
+    # =====================================================
 
     profile_image = (
         ASSETS_DIR / "profile.jpg"
@@ -1307,6 +1343,21 @@ if page == "Home":
 
             with column:
 
+                # -----------------------------------------
+                # TITLE
+                # -----------------------------------------
+
+                st.subheader(
+                    project.get(
+                        "title",
+                        "Untitled Project"
+                    )
+                )
+
+                # -----------------------------------------
+                # IMAGES
+                # -----------------------------------------
+
                 images = load_project_images(
                     project["_folder"]
                 )
@@ -1366,14 +1417,9 @@ if page == "Home":
                         unsafe_allow_html=True
                     )
 
-
-                st.subheader(
-                    project.get(
-                        "title",
-                        "Untitled Project"
-                    )
-                )
-
+                # -----------------------------------------
+                # CATEGORY
+                # -----------------------------------------
 
                 if project.get("category"):
 
@@ -1387,6 +1433,10 @@ if page == "Home":
                     )
 
 
+                # -----------------------------------------
+                # SHORT DESCRIPTION
+                # -----------------------------------------
+
                 st.markdown(
                     f"""
                     <div class="featured-description">
@@ -1396,6 +1446,10 @@ if page == "Home":
                     unsafe_allow_html=True
                 )
 
+
+                # -----------------------------------------
+                # LINKS
+                # -----------------------------------------
 
                 if project.get("demo"):
 
@@ -1445,6 +1499,10 @@ elif page == "Projects":
         st.divider()
 
 
+        # =================================================
+        # TITLE
+        # =================================================
+
         st.header(
             project.get(
                 "title",
@@ -1453,12 +1511,20 @@ elif page == "Projects":
         )
 
 
+        # =================================================
+        # CATEGORY
+        # =================================================
+
         if project.get("category"):
 
             st.caption(
                 project["category"]
             )
 
+
+        # =================================================
+        # FULL DESCRIPTION
+        # =================================================
 
         st.write(
             project.get(
@@ -1467,6 +1533,10 @@ elif page == "Projects":
             )
         )
 
+
+        # =================================================
+        # IMAGES
+        # =================================================
 
         images = load_project_images(
             project["_folder"]
@@ -1526,6 +1596,10 @@ elif page == "Projects":
                 state_prefix=gallery_key
             )
 
+
+        # =================================================
+        # LINKS
+        # =================================================
 
         col1, col2 = st.columns(2)
 
@@ -1720,22 +1794,18 @@ elif page == "Education":
     st.divider()
 
 
-    # =====================================================
-    # LANGUAGES
-    # =====================================================
-
     st.header(
         "Languages"
     )
 
 
     st.write(
-        "🇮🇩 Indonesian"
+        "🇮🇩 Bahasa Indonesia"
     )
 
 
     st.write(
-        "🇬🇧 English"
+        "🇬🇧 Bahasa Inggris"
     )
 
 
