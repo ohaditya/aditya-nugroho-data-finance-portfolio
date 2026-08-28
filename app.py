@@ -59,10 +59,26 @@ st.markdown(
         color: #E2E8F0;
     }
 
-    .block-container {
+    /*
+       FIX:
+       Memberikan ruang di bagian atas agar konten
+       tidak tertutup oleh header / toolbar Streamlit.
+    */
+
+    .stAppViewContainer .main .block-container {
         max-width: 1180px;
-        padding-top: 2rem;
-        padding-bottom: 4rem;
+        padding-top: 5.5rem !important;
+        padding-bottom: 4rem !important;
+    }
+
+
+    /* =====================================================
+       STREAMLIT HEADER
+       ===================================================== */
+
+    header[data-testid="stHeader"] {
+        background-color: #0B1120;
+        z-index: 999;
     }
 
 
@@ -86,7 +102,8 @@ st.markdown(
 
     h1,
     h2,
-    h3 {
+    h3,
+    h4 {
         color: #F8FAFC !important;
     }
 
@@ -108,7 +125,6 @@ st.markdown(
             );
 
         padding: 45px;
-
         border-radius: 25px;
 
         border: 1px solid #1E4545;
@@ -128,12 +144,14 @@ st.markdown(
         color: #2DD4BF;
 
         font-size: 13px;
-
         font-weight: 700;
 
         letter-spacing: 2px;
-
         text-transform: uppercase;
+
+        margin-bottom: 10px;
+
+        display: block;
     }
 
 
@@ -212,7 +230,7 @@ st.markdown(
 
 
     /* =====================================================
-       PROJECT DESCRIPTION
+       FEATURED PROJECT DESCRIPTION
        ===================================================== */
 
     .featured-description {
@@ -220,11 +238,17 @@ st.markdown(
 
         font-size: 14px;
 
-        line-height: 1.8;
+        line-height: 1.7;
 
-        min-height: 105px;
+        min-height: 75px;
+
+        margin-bottom: 10px;
     }
 
+
+    /* =====================================================
+       PROJECT META
+       ===================================================== */
 
     .project-meta {
         color: #64748B;
@@ -251,6 +275,29 @@ st.markdown(
         border-radius: 10px !important;
 
         font-weight: 600 !important;
+    }
+
+
+    /* =====================================================
+       METRIC
+       ===================================================== */
+
+    [data-testid="stMetric"] {
+        background: #111827;
+
+        border: 1px solid #1E293B;
+
+        padding: 15px;
+
+        border-radius: 14px;
+    }
+
+    [data-testid="stMetricLabel"] {
+        color: #94A3B8 !important;
+    }
+
+    [data-testid="stMetricValue"] {
+        color: #F8FAFC !important;
     }
 
 
@@ -290,9 +337,7 @@ st.markdown(
 # =========================================================
 
 PROFILE = {
-
-    "name":
-        "Aditya Nugroho",
+    "name": "Aditya Nugroho",
 
     "headline":
         "Data Analyst | Financial Analysis | Machine Learning",
@@ -350,7 +395,6 @@ PROFILE = {
 
     "github":
         "https://github.com/ohaditya"
-
 }
 
 
@@ -359,7 +403,6 @@ PROFILE = {
 # =========================================================
 
 SKILLS = [
-
     "Python",
     "Pandas",
     "SQL",
@@ -381,7 +424,6 @@ SKILLS = [
     "RapidMiner",
     "TradingView",
     "MetaTrader 4 & 5"
-
 ]
 
 
@@ -390,13 +432,11 @@ SKILLS = [
 # =========================================================
 
 PERSONAL_SKILLS = [
-
     "Analytical Thinking",
     "Attention to Detail",
     "Problem Solving",
     "Accuracy & Accountability",
     "Teamwork & Collaboration"
-
 ]
 
 
@@ -407,7 +447,6 @@ PERSONAL_SKILLS = [
 EXPERIENCE = [
 
     {
-
         "role":
             "Foreign Exchange Specialist",
 
@@ -422,19 +461,15 @@ EXPERIENCE = [
 
         "description":
             [
-
                 "Analyzed 71 financial instruments covering Forex, precious metals, global index futures, crude oil, and US stocks to support trading decisions and client risk management.",
 
                 "Prepared market reports and delivered market insights to clients on a regular basis.",
 
                 "Provided education and seminars covering trading strategies, risk management, and financial products to 80 clients."
-
             ]
-
     },
 
     {
-
         "role":
             "Technical Analyst",
 
@@ -449,19 +484,15 @@ EXPERIENCE = [
 
         "description":
             [
-
                 "Monitored and analyzed 50 foreign currency instruments using technical analysis to support risk assessment and decision-making.",
 
                 "Prepared market analysis reports and recommendations regarding price movements.",
 
                 "Conducted Forex education and seminars for 20 clients."
-
             ]
-
     },
 
     {
-
         "role":
             "ATM Cassette Restocking",
 
@@ -476,7 +507,6 @@ EXPERIENCE = [
 
         "description":
             [
-
                 "Restocked cash for more than 40 ATMs every day according to company operational standards.",
 
                 "Performed cash sorting, counting, and transaction data entry involving cash exceeding IDR 15 billion per day.",
@@ -484,9 +514,7 @@ EXPERIENCE = [
                 "Recorded and monitored cash inflows and outflows at the vault with total transaction values exceeding IDR 25 billion per day.",
 
                 "Performed reconciliation between physical cash and system records to ensure transaction accuracy."
-
             ]
-
     }
 
 ]
@@ -500,13 +528,13 @@ def natural_key(value):
     """
     Natural sorting.
 
-    Example:
     image1
     image2
     image3
     image10
 
     instead of:
+
     image1
     image10
     image2
@@ -515,7 +543,10 @@ def natural_key(value):
 
     return [
         int(part) if part.isdigit() else part.lower()
-        for part in re.split(r"(\d+)", str(value))
+        for part in re.split(
+            r"(\d+)",
+            str(value)
+        )
     ]
 
 
@@ -591,10 +622,7 @@ def render_image_box(image_path, label=""):
         )
 
         if label:
-
-            st.caption(
-                label
-            )
+            st.caption(label)
 
     except Exception:
 
@@ -604,25 +632,14 @@ def render_image_box(image_path, label=""):
         )
 
         if label:
-
-            st.caption(
-                label
-            )
+            st.caption(label)
 
 
 # =========================================================
-# GALLERY CALLBACK
+# GALLERY CALLBACKS
 # =========================================================
 
-def open_gallery_callback(
-    state_prefix
-):
-    """
-    Safely open gallery.
-
-    IMPORTANT:
-    The state key is different from the button widget key.
-    """
+def open_gallery_callback(state_prefix):
 
     st.session_state[
         f"{state_prefix}_is_open"
@@ -633,9 +650,7 @@ def open_gallery_callback(
     ] = 0
 
 
-def close_gallery_callback(
-    state_prefix
-):
+def close_gallery_callback(state_prefix):
 
     st.session_state[
         f"{state_prefix}_is_open"
@@ -646,9 +661,7 @@ def close_gallery_callback(
     ] = 0
 
 
-def previous_gallery_callback(
-    state_prefix
-):
+def previous_gallery_callback(state_prefix):
 
     current = st.session_state.get(
         f"{state_prefix}_index",
@@ -788,10 +801,15 @@ def show_project_gallery(
 
         st.button(
             "← Previous",
+
             key=f"{state_prefix}_prev",
+
             use_container_width=True,
+
             disabled=current == 0,
+
             on_click=previous_gallery_callback,
+
             args=(state_prefix,)
         )
 
@@ -817,10 +835,15 @@ def show_project_gallery(
 
         st.button(
             "Next →",
+
             key=f"{state_prefix}_next",
+
             use_container_width=True,
+
             disabled=current == len(images) - 1,
+
             on_click=next_gallery_callback,
+
             args=(
                 state_prefix,
                 len(images)
@@ -832,9 +855,13 @@ def show_project_gallery(
 
         st.button(
             "✕ Close",
+
             key=f"{state_prefix}_close",
+
             use_container_width=True,
+
             on_click=close_gallery_callback,
+
             args=(state_prefix,)
         )
 
@@ -847,24 +874,20 @@ def load_projects():
 
     projects = []
 
-
     if not PROJECTS_DIR.exists():
-
         return projects
 
 
     folders = sorted(
         PROJECTS_DIR.iterdir(),
-        key=lambda folder: natural_key(
-            folder.name
-        )
+        key=lambda folder:
+            natural_key(folder.name)
     )
 
 
     for folder in folders:
 
         if not folder.is_dir():
-
             continue
 
 
@@ -874,7 +897,6 @@ def load_projects():
 
 
         if not project_file.exists():
-
             continue
 
 
@@ -888,9 +910,8 @@ def load_projects():
 
             data["_folder"] = folder
 
-            projects.append(
-                data
-            )
+            projects.append(data)
+
 
         except json.JSONDecodeError as error:
 
@@ -898,6 +919,7 @@ def load_projects():
                 f"Project JSON error: "
                 f"{project_file.name} — {error}"
             )
+
 
         except Exception:
 
@@ -911,9 +933,7 @@ def load_projects():
 # LOAD PROJECT IMAGES
 # =========================================================
 
-def load_project_images(
-    folder
-):
+def load_project_images(folder):
 
     image_folder = (
         folder / "images"
@@ -921,17 +941,14 @@ def load_project_images(
 
 
     if not image_folder.exists():
-
         return []
 
 
     extensions = {
-
         ".png",
         ".jpg",
         ".jpeg",
         ".webp"
-
     }
 
 
@@ -946,13 +963,10 @@ def load_project_images(
             and image.suffix.lower()
             in extensions
         )
-
     ]
 
 
-    return sorted_images(
-        images
-    )
+    return sorted_images(images)
 
 
 # =========================================================
@@ -962,17 +976,14 @@ def load_project_images(
 def load_certificates():
 
     if not CERTIFICATES_DIR.exists():
-
         return []
 
 
     extensions = {
-
         ".png",
         ".jpg",
         ".jpeg",
         ".webp"
-
     }
 
 
@@ -987,7 +998,6 @@ def load_certificates():
             and certificate.suffix.lower()
             in extensions
         )
-
     ]
 
 
@@ -1004,16 +1014,7 @@ def load_certificates():
 # FEATURED PROJECT DESCRIPTION
 # =========================================================
 
-def get_featured_description(
-    project
-):
-    """
-    Short description khusus untuk
-    Featured Projects pada Home.
-
-    Description lengkap dari JSON
-    tetap digunakan pada halaman Projects.
-    """
+def get_featured_description(project):
 
     title = str(
         project.get(
@@ -1027,17 +1028,12 @@ def get_featured_description(
     # FINANCE PERFORMANCE
     # -----------------------------------------------------
 
-    if (
-        "finance performance branch"
-        in title
-    ):
+    if "finance performance branch" in title:
 
         return (
-            "Analyzed branch financial "
-            "performance using Power BI "
-            "to identify disbursement trends "
-            "and performance gaps across "
-            "branch age groups."
+            "Power BI analysis of branch "
+            "financial performance and "
+            "disbursement trends."
         )
 
 
@@ -1051,9 +1047,9 @@ def get_featured_description(
     ):
 
         return (
-            "Developed a Python and Streamlit "
-            "application for financial transaction "
-            "monitoring and customer portfolio analysis."
+            "Python and Streamlit application "
+            "for transaction monitoring and "
+            "portfolio analysis."
         )
 
 
@@ -1064,9 +1060,9 @@ def get_featured_description(
     if "xauusd" in title:
 
         return (
-            "Analyzed and predicted XAUUSD "
-            "closing prices using Linear Regression "
-            "and SVM with historical market data."
+            "Machine learning analysis for "
+            "XAUUSD closing price prediction "
+            "using Linear Regression and SVM."
         )
 
 
@@ -1082,25 +1078,24 @@ def get_featured_description(
     )
 
 
-    # Ambil bagian sebelum section berikutnya
     description = description.split(
         "\n\n"
     )[0].strip()
 
 
-    # Hapus markdown sederhana
+    # Remove common markdown formatting
     description = re.sub(
-        r"\*\*(.*?)\*\*",
-        r"\1",
+        r"[*_`#]",
+        "",
         description
     )
 
 
-    # Batasi panjang
-    if len(description) > 180:
+    # Limit length
+    if len(description) > 150:
 
         description = (
-            description[:177].rstrip()
+            description[:147].rstrip()
             + "..."
         )
 
@@ -1149,7 +1144,6 @@ st.sidebar.caption(
 # =========================================================
 
 if page == "Home":
-
 
     # =====================================================
     # PROFILE
@@ -1277,7 +1271,7 @@ if page == "Home":
 
 
     # =====================================================
-    # SKILLS
+    # TECHNICAL SKILLS
     # =====================================================
 
     st.header(
@@ -1349,7 +1343,6 @@ if page == "Home":
 
             with column:
 
-
                 # -----------------------------------------
                 # IMAGES
                 # -----------------------------------------
@@ -1374,12 +1367,16 @@ if page == "Home":
 
                     st.button(
                         "🔍 Open Gallery",
+
                         key=(
                             f"{gallery_state}"
                             f"_open_button"
                         ),
+
                         use_container_width=True,
+
                         on_click=open_gallery_callback,
+
                         args=(gallery_state,)
                     )
 
@@ -1389,7 +1386,9 @@ if page == "Home":
                             "title",
                             "Untitled Project"
                         ),
+
                         images,
+
                         state_prefix=gallery_state
                     )
 
@@ -1424,9 +1423,7 @@ if page == "Home":
                 # CATEGORY
                 # -----------------------------------------
 
-                if project.get(
-                    "category"
-                ):
+                if project.get("category"):
 
                     st.markdown(
                         f"""
@@ -1456,9 +1453,7 @@ if page == "Home":
                 # LINKS
                 # -----------------------------------------
 
-                if project.get(
-                    "demo"
-                ):
+                if project.get("demo"):
 
                     st.link_button(
                         "🔗 Live Demo",
@@ -1466,9 +1461,7 @@ if page == "Home":
                         use_container_width=True
                     )
 
-                elif project.get(
-                    "github"
-                ):
+                elif project.get("github"):
 
                     st.link_button(
                         "💻 GitHub",
@@ -1482,7 +1475,6 @@ if page == "Home":
 # =========================================================
 
 elif page == "Projects":
-
 
     st.title(
         "Projects"
@@ -1506,7 +1498,6 @@ elif page == "Projects":
 
     for project in project_list:
 
-
         st.divider()
 
 
@@ -1526,9 +1517,7 @@ elif page == "Projects":
         # CATEGORY
         # =================================================
 
-        if project.get(
-            "category"
-        ):
+        if project.get("category"):
 
             st.caption(
                 project["category"]
@@ -1558,7 +1547,6 @@ elif page == "Projects":
 
         if images:
 
-
             render_image_box(
                 images[0],
                 label=(
@@ -1585,12 +1573,16 @@ elif page == "Projects":
 
             st.button(
                 f"🔍 Open Gallery · {len(images)} Images",
+
                 key=(
                     f"{gallery_key}"
                     f"_open_button"
                 ),
+
                 use_container_width=True,
+
                 on_click=open_gallery_callback,
+
                 args=(gallery_key,)
             )
 
@@ -1600,7 +1592,9 @@ elif page == "Projects":
                     "title",
                     "Untitled Project"
                 ),
+
                 images,
+
                 state_prefix=gallery_key
             )
 
@@ -1614,9 +1608,7 @@ elif page == "Projects":
 
         with col1:
 
-            if project.get(
-                "demo"
-            ):
+            if project.get("demo"):
 
                 st.link_button(
                     "🔗 Live Demo",
@@ -1627,9 +1619,7 @@ elif page == "Projects":
 
         with col2:
 
-            if project.get(
-                "github"
-            ):
+            if project.get("github"):
 
                 st.link_button(
                     "💻 GitHub",
@@ -1644,14 +1634,12 @@ elif page == "Projects":
 
 elif page == "Experience":
 
-
     st.title(
         "Professional Experience"
     )
 
 
     for experience in EXPERIENCE:
-
 
         st.divider()
 
@@ -1672,9 +1660,7 @@ elif page == "Experience":
         )
 
 
-        for description in experience[
-            "description"
-        ]:
+        for description in experience["description"]:
 
             st.markdown(
                 f"- {description}"
@@ -1713,7 +1699,6 @@ elif page == "Experience":
 
 elif page == "Certificates":
 
-
     st.title(
         "Certificates"
     )
@@ -1743,14 +1728,13 @@ elif page == "Certificates":
             certificates
         ):
 
-
             with columns[
                 index % 3
             ]:
 
-
                 render_image_box(
                     certificate,
+
                     label=(
                         certificate.stem
                         .replace(
@@ -1767,7 +1751,6 @@ elif page == "Certificates":
 # =========================================================
 
 elif page == "Education":
-
 
     st.title(
         "Education"
@@ -1834,7 +1817,6 @@ elif page == "Education":
 
 elif page == "Contact":
 
-
     st.title(
         "Let's Connect"
     )
@@ -1854,8 +1836,11 @@ elif page == "Contact":
     col1, col2 = st.columns(2)
 
 
-    with col1:
+    # =====================================================
+    # CONTACT
+    # =====================================================
 
+    with col1:
 
         st.subheader(
             "Contact"
@@ -1864,20 +1849,27 @@ elif page == "Contact":
 
         st.link_button(
             "💬 WhatsApp",
+
             f"https://wa.me/{PROFILE['whatsapp']}",
+
             use_container_width=True
         )
 
 
         st.link_button(
             "✉️ Email",
+
             f"mailto:{PROFILE['email']}",
+
             use_container_width=True
         )
 
 
-    with col2:
+    # =====================================================
+    # PROFESSIONAL
+    # =====================================================
 
+    with col2:
 
         st.subheader(
             "Professional"
@@ -1886,14 +1878,18 @@ elif page == "Contact":
 
         st.link_button(
             "💼 LinkedIn",
+
             PROFILE["linkedin"],
+
             use_container_width=True
         )
 
 
         st.link_button(
             "💻 GitHub",
+
             PROFILE["github"],
+
             use_container_width=True
         )
 
@@ -1909,15 +1905,18 @@ elif page == "Contact":
 
     if cv_file.exists():
 
-
         st.divider()
 
 
         st.download_button(
             "📄 Download CV",
+
             data=cv_file.read_bytes(),
+
             file_name="Aditya_Nugroho_CV.pdf",
+
             mime="application/pdf",
+
             use_container_width=True
         )
 
@@ -1929,12 +1928,10 @@ elif page == "Contact":
 st.markdown(
     """
     <div class="footer">
-
         Aditya Nugroho ·
         Data Analyst ·
         Financial Analysis ·
         Machine Learning
-
     </div>
     """,
     unsafe_allow_html=True
