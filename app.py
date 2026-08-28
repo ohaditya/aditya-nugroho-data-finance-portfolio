@@ -1793,23 +1793,39 @@ elif page == "Education":
     )
 
 
-    st.divider()
+   # =========================================================
+# LANGUAGES
+# =========================================================
 
+st.divider()
 
-    st.header(
-        "Languages"
+st.header(
+    "Languages"
+)
+
+col1, col2 = st.columns(2)
+
+with col1:
+    st.markdown(
+        """
+        <div class="card">
+            <h3>🇮🇩 Indonesian</h3>
+            <p>Native</p>
+        </div>
+        """,
+        unsafe_allow_html=True
     )
 
-
-    st.write(
-        "🇮🇩 Bahasa Indonesia"
+with col2:
+    st.markdown(
+        """
+        <div class="card">
+            <h3>🇬🇧 English</h3>
+            <p>Professional Working Proficiency</p>
+        </div>
+        """,
+        unsafe_allow_html=True
     )
-
-
-    st.write(
-        "🇬🇧 Bahasa Inggris"
-    )
-
 
 # =========================================================
 # CONTACT
