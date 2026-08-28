@@ -1922,8 +1922,7 @@ elif page == "Documents":
     ]
 
     st.info(
-        "PDF documents are previewed directly on this page. "
-        "Use the download button to save a document."
+        " PDF documents are available for preview and download. "
     )
 
     for document in documents:
